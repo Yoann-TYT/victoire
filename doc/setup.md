@@ -75,7 +75,7 @@ class AppKernel extends Kernel
 
 just start it with docker:
 ```sh
-docker run -d -p 6385:6379 --name myAwesomeRedis redis:latest
+docker run -d -p 6379:6379 --name myAwesomeRedis redis:latest
 ```
 
 ### Config
@@ -146,6 +146,9 @@ victoire_i18n:
 
     #if locale_pattern is domain, then you'll need to define the following parameter:
     #locale_pattern_table: %locale_pattern_table%
+knp_menu:
+    twig:
+        template: VictoireCoreBundle:Menu:knp_menu_main.html.twig
 ```
 
 `app/config/security.yml`
@@ -171,7 +174,10 @@ security:
             logout: true
             anonymous: true
             switch_user: ~
-
+            
+    role_hierarchy:
+            ROLE_VICTOIRE_DEVELOPER: ROLE_VICTOIRE
+            
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 ```
@@ -242,6 +248,7 @@ Then you're done with the Victoire steps but your database is empty. Just run th
 Start by creating your admin user:
 ```sh
 bin/console -e=dev doctrine:database:create
+bin/console -e=dev doctrine:schema:create
 bin/console -e=dev fos:user:create admin anakin@victoire.io myAwesomePassword
 bin/console -e=dev fos:user:promote admin ROLE_VICTOIRE_DEVELOPER
 ```
@@ -275,7 +282,7 @@ VALUES
 	(11, 6, 'Service unavailable', 'error-503', 'en'),
 	(12, 6, 'Service indisponible', 'erreur-503', 'fr'),
 	(13, 7, 'Homepage', 'home', 'en'),
-	(14, 7, 'Page d\'accueil', 'accueil', 'fr'),
+	(14, 7, 'Page d''accueil', 'accueil', 'fr'),
 	(15, 9, 'My blog', 'my-blog', 'en'),
 	(16, 9, 'Mon blog', 'mon-blog', 'fr');
 
@@ -300,6 +307,11 @@ There are some fixtures in `vendor/victoire/victoire/Tests/App/src/Acme/AppBundl
 ```
 
 Find others widget [**here**](http://packagist.org/search/?tags=victoire)
+
+When your widgets are registred on AppKernel, don't forget to update your database.
+```sh
+bin/console -e=dev doctrine:schema:update
+```
 
 ### Prepare Victoire assets
 
