@@ -83,7 +83,7 @@ class AnnotationDriver extends DoctrineAnnotationDriver
                     new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
                     \RecursiveIteratorIterator::LEAVES_ONLY
                 ),
-                '/^(?!.*Tests).+\/Entity\/.+\.php$/i',
+                '/^(?!.*Tests)(?!.*TextBundle)(?!.*WidgetDate).+\/Entity\/.+\.php$/i',
                 \RecursiveRegexIterator::GET_MATCH
             );
             foreach ($iterator as $file) {
